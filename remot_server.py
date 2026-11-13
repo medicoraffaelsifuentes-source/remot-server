@@ -25,6 +25,12 @@ async def signaling_handler(websocket):
                     await clients[target_id].send(message)
                 else:
                     print(f"[-] Error: El destino {target_id} no está conectado.")
+                    # 🛡️ NUEVO: Avisar al Admin que el Agente no está en línea
+                    if action == "offer":
+                        await websocket.send(json.dumps({
+                            "action": "error", 
+                            "message": "El ID del Agente no está conectado a Render. Asegúrate de que su .exe esté abierto."
+                        }))
                     
     except websockets.exceptions.ConnectionClosed:
         pass
